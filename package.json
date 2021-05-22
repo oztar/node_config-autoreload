@@ -1,0 +1,31 @@
+{
+  "name": "config-autoreload",
+  "version": "1.0.0",
+  "description": "Load and reload automatic JSON",
+  "main": "config.js",
+  "scripts": {
+    "test": "mocha test.js",
+    "strt": "node config.js"
+  },
+  "author": "Alfredo Roman Dominguez",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oztar/node_config-autoreload.git"
+  },
+  "keywords": [
+    "config",
+    "autoreload",
+    "config-autoreload",
+    "refresh-json"
+  ],
+  "bugs": {
+    "url": "https://github.com/oztar/node_config-autoreload/issues"
+  },
+  "homepage": "https://github.com/oztar/node_config-autoreload#Readme",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^8.4.0",
+    "chai": "^4.2.0"
+  }
+}
