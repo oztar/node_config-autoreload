@@ -1,78 +1,118 @@
 'user strict'
 /**
-  * @file Check_MK for NODEJS (checkMK)
+  * @file config_autoreload for NODEJS ()
   * @autor Alfredo Roman Domiguez <alfredoromandominguez@gmail.com> 
-  * @example
-  * let check = require('checkMK');
-  * 
-  * let  options = {
-  *    host:  '192.168.72.20'    
-  * }
-  * check.createServer(options);
-  * check.addService('prueba',{name: 'prueba'});
-  * check.addService('prueba2',{
-  *  name: 'prueba2',
-  *  ok: 'prueba 2',
-  *  counter: {
-  *	linea : '9;2;3;0;10',
-  *	linea2: '1;2;7'
-  *  }
-  *})
-  * ...
-  * ...
-  *  check.updateService('prueba2',{
-  *	linea : 9,
-  *	linea2: 1
-  *  });
   */
-
-
-/* basic memory */
-let config =  {
-    'mem': {}
-};
-let _tmp = {
-    config : {},
-    mem   : {}
-};
-/**
- * Config
- *
- * @constructor
- * @param {string} path 
+const fs   = require('fs');
+const p    = require('path');
+/*
+  @title createMem
+  @description Create others departamente with mem, no refreshed
+  @param {array} arr  Array, names of departamentes
 */
-const createConfig = (path)=>{
-    if( path === undefined){ return;}
-    _tmp.mem    = config.mem;
-    try{
-	delete require.cache[require.resolve(path)];
-	_tmp.config = require(path);
-    }catch(err){
-	console.log(err);
-	config = {err: err.toString()}
-	config.mem = _tmp.mem;
-	return;
+const createMem = (arr)=>{
+    for( let i in arr){
+	const id = arr[i];
+	ex[id] = {};
+    }
+    module.exports = ex;
+}
+
+/*
+  @title save
+  @description create file
+  @param {string} option  Name of raiz memory
+  @param {string} path    Folder create file
+  @param {boolean}human   true or false, file human read
+*/
+const save = (option,path,human)=>{
+    if( option     === undefined){return false;}
+    if( ex[option] === undefined){return false;}
+    if( path       === undefined){return false;}
+    if( human      === undefined){ human = false;}
+    if( typeof human !== "boolean"){ human = false;}
+   
+    if(human){
+	try{
+	    fs.writeFileSync(path, JSON.stringify(ex[option], null, 2));
+	}catch(e){
+	    console.log(e);
+	    return false
+	}
+    }else{
+	try{
+	    fs.writeFileSync(path, JSON.stringify(ex[option]));
+	}catch(e){
+	    console.log(e);
+	    return false
+	}
     }
     
-    config = Object.assign({} ,_tmp.config); 
-    
-    if(config.refreshConfig === undefined){ config.refreshConfig  = 30;}
-    
-   
-    config.mem = _tmp.mem;
-    setTimeout( ()=>{
-	createConfig(path);
-    },config.refreshConfig*1000);
-    
-
-    module.exports.config = config;
+    return true;
 }
 
 
-module.exports = {
+/**
+ * @title createRefresh
+ * @description Create new departamente, require file, and refreshed
+ * @param {string} option  Name of raiz memory
+ * @param {string} path 
+ */
+
+const createRefresh = (option,path)=>{
+    if( option === undefined){return false;}
+    if( path === undefined){ return false;}
+    
+    if( ex[option] === undefined){ ex[option] = {};}
+    
+    if(ex[option].autosave){	
+	if(!save(option,path,ex[option].human)){
+	    console.log('err auto save');
+	    return;
+	}
+    }
+    //reload file
+    try{
+	delete require.cache[require.resolve(path)];
+	ex[option] = require(path);
+    }catch(err){
+	console.log(err);
+	ex[option] = {err: err.toString()}
+	return;
+    }
+
+    if(ex[option].refreshConfig === undefined){ ex[option].refreshConfig  = 30;}
+    //autosave
+    if(ex[option].autosave === undefined){ ex[option].autosave  = false;}
+    if(ex[option].human    === undefined){ ex[option].human     = false;}
+
+    setTimeout( ()=>{
+	createRefresh(option,path);
+    },ex[option].refreshConfig*1000);
+    
+    module.exports[option] = ex[option];
+}
+
+
+/**
+ * @title createConfig
+ * @description Create departamente config, require file and refreshed
+ * @param {string} path 
+ */
+
+const createConfig = (path)=>{
+    return createRefresh('config',path);
+}
+
+let ex ={
+    save,
+    createMem,
+    createRefresh,
     createConfig,
-    config
+    mem : {}
 };
+
+module.exports = ex;
 
 
 

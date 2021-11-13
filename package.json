@@ -1,6 +1,6 @@
 {
   "name": "config-autoreload",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Load and reload automatic JSON",
   "main": "config.js",
   "scripts": {
@@ -17,7 +17,13 @@
     "config",
     "autoreload",
     "config-autoreload",
-    "refresh-json"
+    "refresh-json",
+    "memory",
+    "files",
+    "refresh",
+    "autosave",
+    "save-json",
+    "save-file"
   ],
   "bugs": {
     "url": "https://github.com/oztar/node_config-autoreload/issues"
@@ -25,7 +31,7 @@
   "homepage": "https://github.com/oztar/node_config-autoreload#Readme",
   "dependencies": {},
   "devDependencies": {
-    "mocha": "^8.4.0",
-    "chai": "^4.2.0"
+    "chai": "^4.3.4",
+    "mocha": "^8.4.0"
   }
 }
