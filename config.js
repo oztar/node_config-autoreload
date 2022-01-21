@@ -74,9 +74,11 @@ const createRefresh = (option,path)=>{
     //reload file
     try{
 	delete require.cache[require.resolve(path)];
+	ex[option] =  null;//recollector trash
 	ex[option] = require(path);
     }catch(err){
 	console.log(err);
+	ex[option] =  null;//recollector trash
 	ex[option] = {err: err.toString()}
 	return;
     }

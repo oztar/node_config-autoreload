@@ -1,4 +1,4 @@
-## config-autoreload  Version 2.0
+## config-autoreload  Version 2.0.1
 It is a library to store information in Json format:
 - Update files automatically whitout restart node
 - Stores information by departments in memory
