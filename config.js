@@ -10,7 +10,7 @@ const p    = require('path');
   @description Create others departamente with mem, no refreshed
   @param {array} arr  Array, names of departamentes
 */
-const createMem = (arr)=>{
+const createMem = function(arr){
     for( let i in arr){
 	const id = arr[i];
 	ex[id] = {};
@@ -25,7 +25,7 @@ const createMem = (arr)=>{
   @param {string} path    Folder create file
   @param {boolean}human   true or false, file human read
 */
-const save = (option,path,human)=>{
+const save = function(option,path,human){
     if( option     === undefined){return false;}
     if( ex[option] === undefined){return false;}
     if( path       === undefined){return false;}
@@ -59,10 +59,9 @@ const save = (option,path,human)=>{
  * @param {string} path 
  */
 
-const createRefresh = (option,path)=>{
+const createRefresh = function(option,path){
     if( option === undefined){return false;}
-    if( path === undefined){ return false;}
-    
+    if( path === undefined){ return false;}    
     if( ex[option] === undefined){ ex[option] = {};}
     
     if(ex[option].autosave){	
@@ -73,12 +72,12 @@ const createRefresh = (option,path)=>{
     }
     //reload file
     try{
+	ex[option] = null;
+	ex[option] = Object.assign({},require(path));
 	delete require.cache[require.resolve(path)];
-	ex[option] =  null;//recollector trash
-	ex[option] = require(path);
     }catch(err){
 	console.log(err);
-	ex[option] =  null;//recollector trash
+	ex[option] = null;
 	ex[option] = {err: err.toString()}
 	return;
     }
@@ -103,7 +102,9 @@ const createRefresh = (option,path)=>{
  */
 
 const createConfig = (path)=>{
-    return createRefresh('config',path);
+    const xpath = path;
+    path = null;
+    return createRefresh('config',xpath);
 }
 
 let ex ={
