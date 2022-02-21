@@ -1,6 +1,6 @@
 {
   "name": "config-autoreload",
-  "version": "2.0.2",
+  "version": "2.1.2",
   "description": "Load and reload automatic JSON",
   "main": "config.js",
   "scripts": {

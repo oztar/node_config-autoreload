@@ -92,6 +92,7 @@ const createRefresh = function(option,path){
     },ex[option].refreshConfig*1000);
     
     module.exports[option] = ex[option];
+    module.children.splice(0,module.children.length-1);//delete array children, increment full recursive  createRefresh
 }
 
 
